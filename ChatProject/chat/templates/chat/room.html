@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Room</title>
+    <script>
+        const roomName = "{{ room.name }}";
+        const username = "{{ request.user.username }}";
+
+        // JavaScript code for WebSocket connection goes here
+    </script>
+</head>
+<body>
+    <h2>Welcome to {{ room.name }}</h2>
+
+    <div id="chat-log">
+        {% for message in messages %}
+            <p><strong>{{ message.user.username }}:</strong> {{ message.content }}</p>
+        {% endfor %}
+    </div>
+
+    <form id="message-form">
+        <input type="text" id="message-input" placeholder="Enter your message...">
+        <button type="submit">Send</button>
+    </form>
+</body>
+</html>
+<script>
+    const chatSocket = new WebSocket(
+        `ws://${window.location.host}/ws/chat/${roomName}/`
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        document.querySelector('#chat-log').innerHTML += `<p><strong>${data.username}:</strong> ${data.message}</p>`;
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#message-form').onsubmit = function(e) {
+        e.preventDefault();
+        const messageInput = document.querySelector('#message-input');
+        const message = messageInput.value;
+        chatSocket.send(JSON.stringify({'message': message}));
+        messageInput.value = '';
+    };
+</script>

@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"                    # Django core framework
+channels = "*"                  # Django Channels for WebSockets
+channels-redis = "*"            # Redis backend for Django Channels
+django-stubs = "*"              # Type stubs for Django (optional, for type hinting)
+django-environ = "*"            # Environment variable management
+psycopg2-binary = "*"           # PostgreSQL adapter for Python
+asgiref = "*"                   # ASGI reference implementation for async support
+daphne = "*"                    # ASGI server for Django Channels
+
+[dev-packages]
+# Add any development-only packages here, like:
+black = "*"                     # Code formatter (optional)
+flake8 = "*"                    # Linter (optional)
+pytest = "*"                    # Testing framework (optional)
+
+[requires]
+python_version = "3.10"
