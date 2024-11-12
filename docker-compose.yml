@@ -19,10 +19,14 @@ services:
       context: ./ChatProject  # Set context to ChatProject directory
       dockerfile: ./Dockerfile  # Specify relative path to Dockerfile
     command: >
-      sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+      sh -c "python manage.py collectstatic --noinput &&
+             python manage.py migrate &&
+             daphne -b 0.0.0.0 -p 8000 ChatProject.asgi:application"
     volumes:
       - ./ChatProject:/app  # Mount ChatProject directory to /app in container
+      - static_volume:/app/static
+      - media_volume:/app/media  # Add media volume if you need to handle uploads
+
     ports:
       - "8000:8000"
     env_file:
@@ -34,6 +38,8 @@ services:
 
 volumes:
   postgres_data:
+  static_volume:
+  media_volume: 
 
 networks:
   app-network:
